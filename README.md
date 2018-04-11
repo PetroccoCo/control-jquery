@@ -13,9 +13,10 @@ If you don't have them already install these tools first:
 
 ## Prerequisite
 
-In order to run this example you must first create a client in the [Nest Developer portal][nest-dev-portal]. The client should be created with the following required attributes:
+In order to run this example you must first create an OAuth Client in the [Nest Developer portal][portal].  
+The client should be created with the following required attributes:
 
-OAuth Redirect URI: `http://localhost:8080/auth/nest/callback`
+OAuth Redirect URI: `http://localhost:8080/auth/nest/callback`  
 Permissions: Thermostat read/write
 
 All other attributes values are not specific and can be determined by the developer.
@@ -27,10 +28,10 @@ To install required Bower components and Node modules, simply type:
     $ bower install
     $ npm install
 
-Next you will need your client ID and client secret from developer.nest.com/clients set as environment variables:
+Next you will need your OAuth client ID and client secret in the [Nest Developer portal][portal] to set as environment variables:
 
-    $ export NEST_ID=<CLIENT ID>
-    $ export NEST_SECRET=<CLIENT SECRET>
+    $ export NEST_ID='Your OAuth client ID here'
+    $ export NEST_SECRET='Your OAuth client secret here'
 
 And finally to start the server:
 
@@ -52,7 +53,7 @@ control-jquery - Apache 2.0 - See [LICENSE][license] for more information.
 
 [node]: https://nodejs.org/en/download/
 [yeoman]: http://yeoman.io/learning/index.html
-[nest-dev-portal]: https://developer.nest.com/clients
+[portal]: https://console.developers.nest.com
 [contrib]: CONTRIBUTING.md
 [license]: LICENSE
 [font-license]: https://github.com/nestlabs/control-jquery/blob/master/app/fonts/LCDBOLD/readme.txt
