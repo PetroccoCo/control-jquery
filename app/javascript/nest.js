@@ -17,8 +17,8 @@
 'use strict';
 
 var nestToken  = $.cookie('nest_token'),
-    thermostat = {},
-    structure  = {};
+  thermostat = {},
+  structure  = {};
 
 if (nestToken) { // Simple check for token
 
@@ -38,8 +38,8 @@ if (nestToken) { // Simple check for token
   The appropriate version of target temperature to display is based on
   the following parameters:
 
-  * hvac_mode (C or F)
-  * temperature_scale (heat-cool, heat, cool, or off)
+ * hvac_mode (C or F)
+ * temperature_scale (heat-cool, heat, cool, or off)
 
   When hvac_mode is 'heat-cool' we display both the low and the high setpoints like:
 
@@ -58,7 +58,7 @@ if (nestToken) { // Simple check for token
   @method
   @param object thermostat model
   @returns undefined
-*/
+  */
 function updateTemperatureDisplay (thermostat) {
   var scale = thermostat.temperature_scale.toLowerCase();
 
@@ -68,13 +68,13 @@ function updateTemperatureDisplay (thermostat) {
     $('#target-temperature .temp').text(
       thermostat['target_temperature_low_' + scale] + ' • ' +
       thermostat['target_temperature_high_' + scale]
-     );
+    );
 
-  // Display the string 'off' when the thermostat is turned off
+    // Display the string 'off' when the thermostat is turned off
   } else if (thermostat.hvac_mode === 'off') {
     $('#target-temperature .temp').text('off');
 
-  // Otherwise just display the target temperature
+    // Otherwise just display the target temperature
   } else {
     $('#target-temperature .temp').text(thermostat['target_temperature_' + scale] + '°');
     $('#heating-up-button, #heating-down-button, #cooling-up-button, #cooling-down-button').hide();
@@ -87,15 +87,15 @@ function updateTemperatureDisplay (thermostat) {
 /**
   Updates the thermostat view with the latests data
 
-  * Temperature scale
-  * HVAC mode
-  * Target and ambient temperatures
-  * Device name
+ * Temperature scale
+ * HVAC mode
+ * Target and ambient temperatures
+ * Device name
 
   @method
   @param object thermostat model
   @returns undefined
-*/
+  */
 function updateThermostatView(thermostat) {
   var scale = thermostat.temperature_scale;
 
@@ -113,7 +113,7 @@ function updateThermostatView(thermostat) {
   @method
   @param object structure
   @returns undefined
-*/
+  */
 function updateStructureView (structure) {
   if (structure.away === 'home') {
     $('#target-temperature').addClass('home');
@@ -134,12 +134,12 @@ function updateStructureView (structure) {
   @param String temperature scale
   @param String type, high or low. Used in heat-cool mode (optional)
   @returns undefined
-*/
+  */
 function adjustTemperature(degrees, scale, type) {
   scale = scale.toLowerCase();
   type = type ? type + '_' : '';
   var newTemp = thermostat['target_temperature_' + scale] + degrees,
-      path = 'devices/thermostats/' + thermostat.device_id + '/target_temperature_' + type + scale;
+    path = 'devices/thermostats/' + thermostat.device_id + '/target_temperature_' + type + scale;
 
   if (thermostat.is_using_emergency_heat) {
     console.error("Can't adjust target temperature while using emergency heat.");
@@ -150,8 +150,16 @@ function adjustTemperature(degrees, scale, type) {
   } else if (structure.away.indexOf('away') > -1) {
     console.error("Can't adjust target temperature while structure is set to Away or Auto-away.");
   } else { // ok to set target temperature
+    console.log(path, newTemp);
     dataRef.child(path).set(newTemp);
   }
+}
+
+function setTemp(degrees) {
+  var newTemp = thermostat['target_temperature_f'] + degrees,
+    path = 'devices/thermostats/' + thermostat.device_id + '/target_temperature_f';
+  console.log(path, newTemp);
+  dataRef.child(path).set(newTemp);
 }
 
 /**
@@ -162,7 +170,7 @@ function adjustTemperature(degrees, scale, type) {
 */
 $('#up-button').on('click', function () {
   var scale = thermostat.temperature_scale,
-      adjustment = scale === 'F' ? +1 : +0.5;
+    adjustment = scale === 'F' ? +1 : +0.5;
   adjustTemperature(adjustment, scale);
 });
 
@@ -174,7 +182,7 @@ $('#up-button').on('click', function () {
 */
 $('#down-button').on('click', function () {
   var scale = thermostat.temperature_scale,
-      adjustment = scale === 'F' ? -1 : -0.5;
+    adjustment = scale === 'F' ? -1 : -0.5;
   adjustTemperature(adjustment, scale);
 });
 
@@ -186,7 +194,7 @@ $('#down-button').on('click', function () {
 */
 $('#heating-up-button-heat').on('click', function () {
   var scale = thermostat.temperature_scale,
-      adjustment = scale === 'F' ? +1 : +0.5;
+    adjustment = scale === 'F' ? +1 : +0.5;
   adjustTemperature(adjustment, scale, 'heat');
 });
 
@@ -198,7 +206,7 @@ $('#heating-up-button-heat').on('click', function () {
 */
 $('#heating-down-button').on('click', function () {
   var scale = thermostat.temperature_scale,
-      adjustment = scale === 'F' ? -1 : -0.5;
+    adjustment = scale === 'F' ? -1 : -0.5;
   adjustTemperature(adjustment, scale, 'heat');
 });
 
@@ -210,7 +218,7 @@ $('#heating-down-button').on('click', function () {
 */
 $('#cooling-up-button').on('click', function () {
   var scale = thermostat.temperature_scale,
-      adjustment = scale === 'F' ? +1 : +0.5;
+    adjustment = scale === 'F' ? +1 : +0.5;
   adjustTemperature(adjustment, scale, 'cool');
 });
 
@@ -222,7 +230,7 @@ $('#cooling-up-button').on('click', function () {
 */
 $('#cooling-down-button').on('click', function () {
   var scale = thermostat.temperature_scale,
-      adjustment = scale === 'F' ? -1 : -0.5;
+    adjustment = scale === 'F' ? -1 : -0.5;
   adjustTemperature(adjustment, scale, 'cool');
 });
 
@@ -233,7 +241,7 @@ $('#cooling-down-button').on('click', function () {
   @method
   @param object
   @returns object
-*/
+  */
 function firstChild(object) {
   for(var key in object) {
     return object[key];
@@ -251,7 +259,7 @@ dataRef.on('value', function (snapshot) {
   // For simplicity, we only care about the first
   // thermostat in the first structure
   structure = firstChild(data.structures),
-  thermostat = data.devices.thermostats[structure.thermostats[0]];
+    thermostat = data.devices.thermostats[structure.thermostats[0]];
 
   // TAH-361, device_id does not match the device's path ID
   thermostat.device_id = structure.thermostats[0];
@@ -261,3 +269,37 @@ dataRef.on('value', function (snapshot) {
 
 });
 
+function startTimer(duration, display) {
+  var timer = duration, minutes, seconds;
+  var previousTargetTemp = 63;
+  setInterval(function () {
+    minutes = parseInt(timer / 60, 10);
+    seconds = parseInt(timer % 60, 10);
+
+    minutes = minutes < 10 ? "0" + minutes : minutes;
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    display.text(minutes + ":" + seconds);
+
+    if (--timer < 0) {
+      if( thermostat.hvac_state == "heating") {
+        previousTargetTemp = thermostat.target_temperature_f;
+        setTemp(-10);
+        timer = 120; // Give a 120 second cool off period
+      } else {
+        if (thermostat.ambient_temperature_f < previousTargetTemp) {
+          setTemp(+10);
+        }
+        timer = duration;
+      }
+    }
+  }, 1000);
+}
+
+function setupTimer() {
+  var onTime = 60 * 9;
+  var display = $('#timer');
+  startTimer(onTime, display);
+}
+
+setupTimer();
